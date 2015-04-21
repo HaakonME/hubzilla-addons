@@ -1,6 +1,6 @@
-red-addons
-==========
+redmatrix-addons
+================
 
-These are addons for RedMatrix sites (see https://github.com/friendica/red )
+These are addons for redmatrix sites (see https://github.com/redmatrix/redmatrix )
 
 
