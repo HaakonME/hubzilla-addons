@@ -87,6 +87,9 @@ function nofed_post_local(&$a,&$b) {
 	if($b['created'] != $b['edited'])
 		return;
 
+	if($b['mid'] !== $b['parent_mid'])
+		return;
+
 	if((local_channel()) && (local_channel() == $b['uid'])) {
 
 		if($b['allow_cid'] || $b['allow_gid'] || $b['deny_cid'] || $b['deny_gid'])
