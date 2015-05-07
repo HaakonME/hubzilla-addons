@@ -164,7 +164,7 @@ function rtof_post_hook(&$a,&$b) {
 
 	$msg = $b['body'];
 
-	$postdata = array('status' => $b['body'], 'title' => $b['title'], 'message_id' => $b['mid'], 'source' => 'Red Matrix');
+	$postdata = array('status' => $b['body'], 'title' => $b['title'], 'message_id' => $b['mid'], 'source' => 'Hubzilla');
 
 	if(strlen($b['body'])) {
 		$ret = z_post_url($api . 'statuses/update', $postdata, 0, array('http_auth' => $username . ':' . $password, 'novalidate' => 1));

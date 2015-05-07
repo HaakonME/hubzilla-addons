@@ -2,7 +2,7 @@
 /**
 * Name: DirStats
 * Description: Show some statistics about the directory.  
-* This will list the number of RedMatrix, Friendica and Diaspora
+* This will list the number of Hubzilla, Friendica and Diaspora
 * hubs that your own hub is aware of.  
 * As the name suggets, this is intended for directory servers, where
 * this will provide accurate counts of all known Red hubs and channels.
@@ -70,13 +70,13 @@ if (argv(1) == 'json') {
 	echo json_return_and_die($dirstats);
 	}
 
-	// Used by RedMatrix News
+	// Used by Hubzilla News
 	elseif (argv(1) == 'genpost' && get_config('dirstats','allowfiledump')) {
 			$result = '[b]Hub count[/b] : ' . $hubcount . "\xA" .
-			'[b]RedMatrix Hubs[/b] : ' . $zotcount . "\xA" .
+			'[b]Hubzilla Hubs[/b] : ' . $zotcount . "\xA" .
 			'[b]Friendica Hubs[/b] : ' . $friendicacount . "\xA" .
 			'[b]Diaspora Pods[/b] : ' . $diasporacount . "\xA" .
-			'[b]RedMatrix Channels[/b] : ' . $channelcount . "\xA" .
+			'[b]Hubzilla Channels[/b] : ' . $channelcount . "\xA" .
 			'[b]Friendica Profiles[/b] : ' . $friendicachannelcount . "\xA" .
 			'[b]Diaspora Profiles[/b] : ' . $diasporachannelcount . "\xA" .
 			'[b]People aged 35 and above[/b] : ' . $over35s . "\xA" .
@@ -90,16 +90,16 @@ if (argv(1) == 'json') {
 else {
 	$tpl = get_markup_template( "dirstats.tpl", "addon/dirstats/" );
 	 return replace_macros($tpl, array(
-        '$title' => t('RedMatrix Directory Stats'),
+        '$title' => t('Hubzilla Directory Stats'),
         '$hubtitle' => t('Total Hubs'),
 		'$hubcount' => $hubcount,
-        '$zotlabel' => t('RedMatrix Hubs'),
+        '$zotlabel' => t('Hubzilla Hubs'),
 		'$zotcount' => $zotcount,
         '$friendicalabel' => t('Friendica Hubs'),
 		'$friendicacount' => $friendicacount,
         '$diasporalabel' => t('Diaspora Pods'),
 		'$diasporacount' => $diasporacount,
-        '$zotchanlabel' => t('RedMatrix Channels'),
+        '$zotchanlabel' => t('Hubzilla Channels'),
 		'$channelcount' => $channelcount,
         '$friendicachanlabel' => t('Friendica Channels'),
 		'$friendicachannelcount' => $friendicachannelcount,

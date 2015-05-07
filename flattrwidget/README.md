@@ -1,4 +1,4 @@
-Flattr Widget for The Red Matrix
+Flattr Widget for The Hubzilla
 ================================
 This widget is ment to add a [flattr][1] button for one thing to the
 left/right aside area of a red# channel. For example this could be the flattr

@@ -64,8 +64,7 @@ function statistics_json_cron($a,$b) {
 				$s .= ',';
 			$s .= intval($rr['channel_id']);
 		}
-		$x = q("select uid from item where uid in ( $s ) and (item_flags & %d) > 0 and created > %s - INTERVAL %s group by uid",
-			intval(ITEM_WALL),
+		$x = q("select uid from item where uid in ( $s ) and item_wall !=  0 and created > %s - INTERVAL %s group by uid",
 			db_utcnow(), db_quoteinterval('6 MONTH')
 		);
 		if($x)
@@ -83,8 +82,7 @@ function statistics_json_cron($a,$b) {
 				$s .= ',';
 			$s .= intval($rr['channel_id']);
 		}
-		$x = q("select uid from item where uid in ( $s ) and ( item_flags & %d ) > 0 and created > %s - INTERVAL %s group by uid",
-			intval(ITEM_WALL),
+		$x = q("select uid from item where uid in ( $s ) and item_wall != 0 and created > %s - INTERVAL %s group by uid",
 			db_utcnow(), db_quoteinterval('1 MONTH')
 		);
 		if($x)
@@ -98,9 +96,7 @@ function statistics_json_cron($a,$b) {
 	set_config('statistics_json','active_users_monthly', $active_users_monthly);
 
 
-	$posts = q("SELECT COUNT(*) AS local_posts FROM `item` WHERE (item_flags & %d) > 0 ",
-		intval(ITEM_WALL)
-	);
+	$posts = q("SELECT COUNT(*) AS local_posts FROM `item` WHERE item_wall != 0 ");
 	if (!is_array($posts))
 		$local_posts = -1;
 	else

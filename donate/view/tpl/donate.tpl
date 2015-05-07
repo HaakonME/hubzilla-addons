@@ -22,7 +22,7 @@
 </select>
 <br /><br /><br />
 <input type="hidden" value="US" name="lc">
-<input type="hidden" value="RedMatrix Donation" name="item_name">
+<input type="hidden" value="Hubzilla Donation" name="item_name">
 <input type="hidden" value="0" name="no_note">
 <input type="hidden" value="USD" name="currency_code">
 <input type="submit" name="submit" value="{{$onetime}}" class="btn btn-default" />

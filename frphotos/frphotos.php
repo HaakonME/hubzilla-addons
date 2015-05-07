@@ -40,7 +40,7 @@ function frphotos_init(&$a) {
 		curl_setopt($ch, CURLOPT_USERPWD, $fr_username . ':' . $fr_password); 
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);                          
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);                           
-		curl_setopt($ch, CURLOPT_USERAGENT, 'RedMatrix');
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Hubzilla');
  
 		$output = curl_exec($ch);
 		curl_close($ch);

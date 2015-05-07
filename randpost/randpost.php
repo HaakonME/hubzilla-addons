@@ -257,7 +257,8 @@ function randpost_fetch(&$a,&$b) {
 				$x['aid'] = $c[0]['channel_account_id'];
 				$x['mid'] = $x['parent_mid'] = item_message_id();
 				$x['author_xchan'] = $x['owner_xchan'] = $c[0]['channel_hash'];
-				$x['item_flags'] = ITEM_THREAD_TOP|ITEM_ORIGIN|ITEM_WALL|ITEM_VERIFIED;
+				$x['item_flags'] = ITEM_THREAD_TOP|ITEM_ORIGIN|ITEM_VERIFIED;
+				$x['item_wall'] = 1;
 
 				// if it might be a quote make it a quote
 				if(strpos($s['body'],'--'))

@@ -1,7 +1,7 @@
 <?php
 /**
      *
-     * Name: Red Matrix UI Tour
+     * Name: Hubzilla UI Tour
      * Description: Show a tour for new users
      * Version: 0.0
      * Author: Stefan Parviainen <pafcu@iki.fi>
@@ -121,7 +121,7 @@ function tour_addfooter($a,&$navHtml) {
 
 	$steps = 0;
 	if(!in_array('tourintro', $seen)) {
-		$content .= "<li data-orientation='centered' data-tourid='tourintro'><p>".t('Welcome to Red Matrix! Would you like to see a tour of the UI?</p> <p>You can pause it at any time and continue where you left off by reloading the page, or navigting to another page.</p><p>You can also advance by pressing the return key')."</p><button href='javascript:void(0);' class='tourbus-next btn btn-primary'>Start tour <span class='icon-forward'/></button><button href='javascript:void()' class='tourbus-stop btn btn-warning'>Show tour later <span class='icon-pause'/></button><button href='javascript:void();' onclick='notour()' class='tourbus-stop btn btn-danger' onclick='notour();'>Never show tour <span class='icon-remove'></span></button></li>";
+		$content .= "<li data-orientation='centered' data-tourid='tourintro'><p>".t('Welcome to Hubzilla! Would you like to see a tour of the UI?</p> <p>You can pause it at any time and continue where you left off by reloading the page, or navigting to another page.</p><p>You can also advance by pressing the return key')."</p><button href='javascript:void(0);' class='tourbus-next btn btn-primary'>Start tour <span class='icon-forward'/></button><button href='javascript:void()' class='tourbus-stop btn btn-warning'>Show tour later <span class='icon-pause'/></button><button href='javascript:void();' onclick='notour()' class='tourbus-stop btn btn-danger' onclick='notour();'>Never show tour <span class='icon-remove'></span></button></li>";
 		$steps = $steps + 1;
 	}
 

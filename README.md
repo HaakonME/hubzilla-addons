@@ -1,6 +1,6 @@
-redmatrix-addons
+hubzilla-addons
 ================
 
-These are addons for redmatrix sites (see https://github.com/redmatrix/redmatrix )
+These are addons for hubzilla sites (see https://github.com/redmatrix/hubzilla )
 
 

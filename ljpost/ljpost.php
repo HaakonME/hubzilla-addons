@@ -210,7 +210,7 @@ function ljpost_send(&$a,&$b) {
 				<struct>
 					<member>
 						<name>useragent</name>
-						<value><string>RedMatrix</string></value>
+						<value><string>Hubzilla</string></value>
 					</member>
 					<member>
 						<name>taglist</name>
