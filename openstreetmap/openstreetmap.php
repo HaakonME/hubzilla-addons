@@ -110,7 +110,7 @@ function openstreetmap_generate_named_map(&$a,&$b) {
 	if($x['success']) {
 		$j = json_decode($x['body'],true);
 		if($j && is_array($j) && $j[0]['lat'] && $j[0]['lon']) {
-			$arr = array('lat' => $j[0]['lat'],'lon' => $j[0]['lon'],'html' => '');
+			$arr = array('lat' => $j[0]['lat'],'lon' => $j[0]['lon'],'location' => $b['location'], 'html' => '');
 			openstreetmap_generate_map($a,$arr);
 			$b['html'] = $arr['html'];
 		}
@@ -134,23 +134,18 @@ function openstreetmap_generate_map(&$a,&$b) {
 	if(! $marker)
 		$marker = 0;
 
-	$location = '';
-	$coord = '';
-
 	$lat = $b['lat']; // round($b['lat'], 5);
 	$lon = $b['lon']; // round($b['lon'], 5);
-	logger('lat: ' . $lat);
 
-	logger('lon: ' . $lon);
+	logger('lat: ' . $lat, LOGGER_DATA);
+	logger('lon: ' . $lon, LOGGER_DATA);
 
 
 	$b['html'] = '<iframe style="width:100%; height:300px; border:1px solid #ccc" src="' . $tmsserver . '/export/embed.html?bbox=' . ($lon - 0.01) . '%2C' . ($lat - 0.01) . '%2C' . ($lon + 0.01) . '%2C' . ($lat + 0.01) ;
 
-	logger('generate_map: ' . $b['html']);
+	$b['html'] .=  '&amp;layer=mapnik&amp;marker=' . $lat . '%2C' . $lon . '" style="border: 1px solid black"></iframe><br/><small><a href="' . $tmsserver . '/?mlat=' . $lat . '&mlon=' . $lon . '#map=16/' . $lat . '/' . $lon . '">' . (($b['location']) ? escape_tags($b['location']) : t('View Larger')) . '</a></small>';
 
-	$b['html'] .=  '&amp;layer=mapnik&amp;marker=' . $lat . '%2C' . $lon . '" style="border: 1px solid black"></iframe><br/><small><a href="' . $tmsserver . '/?mlat=' . $lat . '&mlon=' . $lon . '#map=16/' . $lat . '/' . $lon . '">' . t('View Larger') . '</a></small>';
-
-	logger('generate_map: ' . $b['html']);
+	logger('generate_map: ' . $b['html'], LOGGER_DATA);
 
 }
 

@@ -63,7 +63,7 @@ json({"status":"ok", "encrypted_address":"%s"})
 
 */
 
-function jappixmini_install() {
+function jappixmini_load() {
 register_hook('feature_settings', 'addon/jappixmini/jappixmini.php', 'jappixmini_settings');
 register_hook('feature_settings_post', 'addon/jappixmini/jappixmini.php', 'jappixmini_settings_post');
 
@@ -93,7 +93,7 @@ if ($addon_version==="") set_config("jappixmini", "version", "1");
 }
 
 
-function jappixmini_uninstall() {
+function jappixmini_unload() {
 unregister_hook('feature_settings', 'addon/jappixmini/jappixmini.php', 'jappixmini_settings');
 unregister_hook('feature_settings_post', 'addon/jappixmini/jappixmini.php', 'jappixmini_settings_post');
 

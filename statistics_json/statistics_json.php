@@ -26,7 +26,7 @@ function statistics_json_init() {
 
 	$statistics = array(
 			"name" => get_config('system','sitename'),
-			"network" => RED_PLATFORM,
+			"network" => PLATFORM_NAME,
 			"version" => RED_VERSION,
 			"registrations_open" => (get_config('system','register_policy') != 0),
 			"total_users" => get_config('statistics_json','total_users'),
