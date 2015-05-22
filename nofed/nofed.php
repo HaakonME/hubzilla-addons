@@ -96,6 +96,9 @@ function nofed_post_local(&$a,&$b) {
 			return;
 
 		$nofed_post = get_pconfig(local_channel(),'nofed','post');
+		if(! $nofed_post)
+			return;
+
 		$nofed_enable = (($nofed_post && x($_REQUEST,'nofed_enable')) ? intval($_REQUEST['nofed_enable']) : 0);
 
 		// if API is used, default to the chosen settings

@@ -13,7 +13,7 @@ function diaspora_load() {
 	register_hook('jot_networks',         'addon/diaspora/diaspora.php', 'diaspora_jot_nets');
 	register_hook('feature_settings',      'addon/diaspora/diaspora.php', 'diaspora_settings');
 	register_hook('feature_settings_post', 'addon/diaspora/diaspora.php', 'diaspora_settings_post');
-//	register_hook('queue_predeliver', 'addon/diaspora/diaspora.php', 'diaspora_queue_hook');
+
 }
 function diaspora_unload() {
 	unregister_hook('post_local',       'addon/diaspora/diaspora.php', 'diaspora_post_local');
@@ -21,7 +21,7 @@ function diaspora_unload() {
 	unregister_hook('jot_networks',     'addon/diaspora/diaspora.php', 'diaspora_jot_nets');
 	unregister_hook('feature_settings',      'addon/diaspora/diaspora.php', 'diaspora_settings');
 	unregister_hook('feature_settings_post', 'addon/diaspora/diaspora.php', 'diaspora_settings_post');
-//	unregister_hook('queue_predeliver', 'addon/diaspora/diaspora.php', 'diaspora_queue_hook');
+
 }
 
 
