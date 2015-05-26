@@ -5,9 +5,10 @@
  * Version: 0.1
  * Author: Michael Vogel <http://pirati.ca/profile/heluecht>
  */
-require_once('library/oauth/http.php');
-require_once('library/oauth/oauth_client.php');
 
+require_once('library/oauth/http.php');
+
+require_once('library/oauth/oauth_client.php');
 require_once('include/permissions.php');
 
 define('PUMPIO_DEFAULT_POLL_INTERVAL', 5); // given in minutes
@@ -39,86 +40,77 @@ function pumpio_content(&$a) {
 		return '';
 	}
 
-	if (isset($a->argv[1]))
-		switch ($a->argv[1]) {
-			case "connect":
+	if(argc() > 1) {
+		switch (argv(1)) {
+			case 'connect':
 				$o = pumpio_connect($a);
 				break;
 			default:
 				$o = print_r($a->argv, true);
 				break;
 		}
-	else
+	}
+	else {
 		$o = pumpio_connect($a);
-
+	}
 	return $o;
 }
 
 function pumpio_registerclient($a, $host) {
 
-	$url = "https://".$host."/api/client/register";
+	$url = 'https://' . $host . '/api/client/register';
 
-        $params = array();
+	$params = array();
 
 	$application_name  = get_config('pumpio', 'application_name');
 
-	if ($application_name == "")
+	if (! $application_name)
 		$application_name = $a->get_hostname();
 
-        $params["type"] = "client_associate";
-        $params["contacts"] = $a->config['system']['admin_email'];
-        $params["application_type"] = "native";
-        $params["application_name"] = $application_name;
-        $params["logo_url"] = $a->get_baseurl()."/images/friendica-256.png";
-        $params["redirect_uris"] = $a->get_baseurl()."/pumpio/connect";
+	$params['type']             = 'client_associate';
+	$params['contacts']         = get_config('system','admin_email');
+	$params['application_type'] = 'native';
+	$params['application_name'] = $application_name;
+	$params['logo_uri']         = z_root() . '/images/rhash-32.png';
+	$params['redirect_uris']    = z_root() . '/pumpio/connect';
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($ch, CURLOPT_POST,1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
-        curl_setopt($ch, CURLOPT_USERAGENT, "Friendica");
 
-        $s = curl_exec($ch);
-        $curl_info = curl_getinfo($ch);
-
-		logger('pumpio: registerclient: ' . $s, LOGGER_DATA);
-
-        if ($curl_info["http_code"] == "200") {
-                $values = json_decode($s);
-                $pumpio = array();
-                $pumpio["client_id"] = $values->client_id;
-                $pumpio["client_secret"] = $values->client_secret;
+	$res = z_post_url($url,$params);
+	if($res['success']) {
+		logger('pumpio: registerclient: ' . $res['body'], LOGGER_DATA);
+		$values = json_decode($res['body'],true);
+		$pumpio = array();
+		$pumpio["client_id"] = $values['client_id'];
+		$pumpio["client_secret"] = $values['client_secret'];
 			
-                print_r($values);
-				return($values);
-        }
+		//print_r($values);
+		return($values);
+	}
 	return(false);
 }
 
 function pumpio_connect($a) {
-	// Start a session.  This is necessary to hold on to  a few keys the callback script will also need
-	session_start();
 
 	// Define the needed keys
-	$consumer_key = get_pconfig(local_channel(), 'pumpio','consumer_key');
+
+	$consumer_key    = get_pconfig(local_channel(), 'pumpio','consumer_key');
 	$consumer_secret = get_pconfig(local_channel(), 'pumpio','consumer_secret');
-	$hostname = get_pconfig(local_channel(), 'pumpio','host');
+	$hostname        = get_pconfig(local_channel(), 'pumpio','host');
 
-	if ((($consumer_key == "") OR ($consumer_secret == "")) AND ($hostname != "")) {
+	if ((($consumer_key == "") || ($consumer_secret == "")) && ($hostname != "")) {
 		$clientdata = pumpio_registerclient($a, $hostname);
-		set_pconfig(local_channel(), 'pumpio','consumer_key', $clientdata->client_id);
-		set_pconfig(local_channel(), 'pumpio','consumer_secret', $clientdata->client_secret);
+		set_pconfig(local_channel(), 'pumpio','consumer_key',    $clientdata['client_id']);
+		set_pconfig(local_channel(), 'pumpio','consumer_secret', $clientdata['client_secret']);
 
-		$consumer_key = get_pconfig(local_channel(), 'pumpio','consumer_key');
-		$consumer_secret = get_pconfig(local_channel(), 'pumpio','consumer_secret');
+		$consumer_key     = get_pconfig(local_channel(), 'pumpio','consumer_key');
+		$consumer_secret  = get_pconfig(local_channel(), 'pumpio','consumer_secret');
 	}
 
-	if (($consumer_key == "") OR ($consumer_secret == ""))
+	if (($consumer_key == "") || ($consumer_secret == ""))
 		return;
 
 	// The callback URL is the script that gets called after the user authenticates with pumpio
-	$callback_url = $a->get_baseurl()."/pumpio/connect";
+	$callback_url = z_root() . '/pumpio/connect';
 
 	// Let's begin.  First we need a Request Token.  The request token is required to send the user
 	// to pumpio's login page.
@@ -147,28 +139,29 @@ function pumpio_connect($a) {
 		}
 		$success = $client->Finalize($success);
 	}
-        if($client->exit)
-	    $o = 'Could not connect to pumpio. Refresh the page or try again later.';
 
-        if($success) {
-		$o .= t("You are now authenticated to pumpio.");
-		$o .= '<br /><a href="'.$a->get_baseurl().'/settings/featured">'.t("return to the featured settings page").'</a>';
+	if($client->exit)
+		$o = 'Could not connect to pumpio. Refresh the page or try again later.';
+
+	if($success) {
+		$o .= t('You are now authenticated to pumpio.');
+		$o .= '<br /><a href="' . z_root() . '/settings/featured">' . t('return to the featured settings page') . '</a>';
 	}
 
 	return($o);
 }
 
 function pumpio_jot_nets(&$a,&$b) {
-    if((! local_channel()) || (! perm_is_allowed(local_channel(),'','view_stream')))
-        return;
+	if((! local_channel()) || (! perm_is_allowed(local_channel(),'','view_stream')))
+		return;
 
-    $pumpio_post = get_pconfig(local_channel(),'pumpio','post');
-    if(intval($pumpio_post) == 1) {
-        $pumpio_defpost = get_pconfig(local_channel(),'pumpio','post_by_default');
-        $selected = ((intval($pumpio_defpost) == 1) ? ' checked="checked" ' : '');
-        $b .= '<div class="profile-jot-net"><input type="checkbox" name="pumpio_enable"' . $selected . ' value="1" /> <img src="addon/pumpio/pumpio.png" /> ' . t('Post to Pump.io') . '</div>';
+	$pumpio_post = get_pconfig(local_channel(),'pumpio','post');
+	if(intval($pumpio_post) == 1) {
+		$pumpio_defpost = get_pconfig(local_channel(),'pumpio','post_by_default');
+		$selected = ((intval($pumpio_defpost) == 1) ? ' checked="checked" ' : '');
+		$b .= '<div class="profile-jot-net"><input type="checkbox" name="pumpio_enable"' . $selected . ' value="1" /> <img src="addon/pumpio/pumpio.png" /> ' . t('Post to Pump.io') . '</div>';
 
-    }
+	}
 }
 
 
@@ -269,7 +262,7 @@ function pumpio_settings_post(&$a,&$b) {
 		set_pconfig(local_channel(),'pumpio','public',$_POST['pumpio_public']);
 		set_pconfig(local_channel(),'pumpio','mirror',$_POST['pumpio_mirror']);
 		set_pconfig(local_channel(),'pumpio','post_by_default',intval($_POST['pumpio_bydefault']));
-                info( t('PumpIO Settings saved.') . EOL);
+				info( t('PumpIO Settings saved.') . EOL);
 
 
 	}
@@ -351,7 +344,7 @@ function pumpio_send(&$a,&$b) {
 
 		$params["object"] = array(
 					'objectType' => "note",
-					'content' => $title.bbcode($b['body'], false, false));
+					'content' => $title . bbcode($b['body'], false, false));
 
 		if ($public)
 			$params["to"] = array(Array(
@@ -384,39 +377,39 @@ function pumpio_send(&$a,&$b) {
  * This may not work with zot
 
 function pumpio_cron($a,$b) {
-        $last = get_config('pumpio','last_poll');
+		$last = get_config('pumpio','last_poll');
 
-        $poll_interval = intval(get_config('pumpio','poll_interval'));
-        if(! $poll_interval)
-                $poll_interval = PUMPIO_DEFAULT_POLL_INTERVAL;
+		$poll_interval = intval(get_config('pumpio','poll_interval'));
+		if(! $poll_interval)
+				$poll_interval = PUMPIO_DEFAULT_POLL_INTERVAL;
 
-        if($last) {
-                $next = $last + ($poll_interval * 60);
-                if($next > time()) {
-                        logger('pumpio: poll intervall not reached');
-                        return;
-                }
-        }
-        logger('pumpio: cron_start');
+		if($last) {
+				$next = $last + ($poll_interval * 60);
+				if($next > time()) {
+						logger('pumpio: poll intervall not reached');
+						return;
+				}
+		}
+		logger('pumpio: cron_start');
 
-        $r = q("SELECT * FROM `pconfig` WHERE `cat` = 'pumpio' AND `k` = 'mirror' AND `v` = '1' ORDER BY RAND() ");
-        if(count($r)) {
-                foreach($r as $rr) {
-                        logger('pumpio: fetching for user '.$rr['uid']);
-                        pumpio_fetchtimeline($a, $rr['uid']);
-                }
-        }
+		$r = q("SELECT * FROM `pconfig` WHERE `cat` = 'pumpio' AND `k` = 'mirror' AND `v` = '1' ORDER BY RAND() ");
+		if(count($r)) {
+				foreach($r as $rr) {
+						logger('pumpio: fetching for user '.$rr['uid']);
+						pumpio_fetchtimeline($a, $rr['uid']);
+				}
+		}
 
-        logger('pumpio: cron_end');
+		logger('pumpio: cron_end');
 
-        set_config('pumpio','last_poll', time());
+		set_config('pumpio','last_poll', time());
 }
 
 function pumpio_fetchtimeline($a, $uid) {
-	$ckey    = get_pconfig($uid, 'pumpio', 'consumer_key');
-	$csecret = get_pconfig($uid, 'pumpio', 'consumer_secret');
-	$otoken  = get_pconfig($uid, 'pumpio', 'oauth_token');
-	$osecret = get_pconfig($uid, 'pumpio', 'oauth_token_secret');
+	$ckey     = get_pconfig($uid, 'pumpio', 'consumer_key');
+	$csecret  = get_pconfig($uid, 'pumpio', 'consumer_secret');
+	$otoken   = get_pconfig($uid, 'pumpio', 'oauth_token');
+	$osecret  = get_pconfig($uid, 'pumpio', 'oauth_token_secret');
 	$lastdate = get_pconfig($uid, 'pumpio', 'lastdate');
 	$hostname = get_pconfig($uid, 'pumpio','host');
 	$username = get_pconfig($uid, "pumpio", "user");
