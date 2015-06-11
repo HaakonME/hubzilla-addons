@@ -153,7 +153,7 @@ function wppost_post_local(&$a,&$b) {
 
 function wppost_send(&$a,&$b) {
 
-    if($b['item_restrict'] || $b['item_private'])
+    if((! is_item_normal($b)) || $b['item_private'])
         return;
 
 	if(! perm_is_allowed($b['uid'],'','view_stream'))
@@ -261,7 +261,7 @@ function wppost_post_remote_end(&$a,&$b) {
 	if($b['mid'] === $b['parent_mid'])
 		return;
 
-    if($b['item_restrict'] || $b['item_private'])
+    if((! is_item_normal($b)) || $b['item_private'])
         return;
 
 	// Does the post owner have this plugin installed?

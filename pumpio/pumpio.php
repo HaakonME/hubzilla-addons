@@ -304,7 +304,7 @@ function pumpio_post_local(&$a,&$b) {
 function pumpio_send(&$a,&$b) {
 
 
-	if($b['item_restrict'] || $b['item_private'] || ($b['created'] !== $b['edited']))
+	if((! is_item_normal($b)) || $b['item_private'] || ($b['created'] !== $b['edited']))
 		return;
 
 	if(! perm_is_allowed($b['uid'],'','view_stream'))
