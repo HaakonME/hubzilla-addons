@@ -140,7 +140,7 @@ function rtof_post_hook(&$a,&$b) {
 	if($b['mid'] != $b['parent_mid'])
 		return;
 
-	if(($b['item_restrict'] & ITEM_DELETED) || $b['item_private'] || ($b['created'] !== $b['edited']))
+	if((! is_item_normal($b)) || $b['item_private'] || ($b['created'] !== $b['edited']))
 		return;
 
 
