@@ -184,9 +184,8 @@ function jappixmini_init(&$a) {
 		killme();
 
 	$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d
-		and not ( abook_flags & %d ) > 0 and xchan_hash = '%s' limit 1",
+		and abook_self = 0 and xchan_hash = '%s' limit 1",
 		intval($channel['channel_id']),
-		intval(ABOOK_FLAG_SELF),
 		dbesc($requestor)
 	);
 	if(! $r)
@@ -600,9 +599,8 @@ function jappixmini_cron(&$a, $d) {
 
 		// for each user, go through list of contacts
 		$rand = db_getfunc('rand');
-		$contacts = q("SELECT * FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE `abook_channel`=%d AND not (abook_flags & %d) > 0 order by $rand",
-			intval($uid),
-			intval(ABOOK_FLAG_SELF)
+		$contacts = q("SELECT * FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE `abook_channel`=%d AND abook_self = 0 order by $rand",
+			intval($uid)
 		);
 
 		$channel = channelx_by_n($uid);

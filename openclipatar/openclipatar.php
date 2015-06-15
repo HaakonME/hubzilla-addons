@@ -256,19 +256,13 @@ function openclipatar_content(&$a) {
 		} 
 		if($is_default_profile) {
 			// unset any existing profile photos
-			$r = q("UPDATE photo SET profile = 0 WHERE profile = 1 AND uid = %d",
-				intval(local_channel()));
-			$r = q("UPDATE photo SET photo_flags = (photo_flags & ~%d ) WHERE (photo_flags & %d )>0 AND uid = %d",
-				intval(PHOTO_PROFILE),
+			$r = q("UPDATE photo SET photo_usage = %d WHERE usage = %d AND uid = %d",
+				intval(PHOTO_NORMAL),
 				intval(PHOTO_PROFILE),
 				intval(local_channel()));
 
 			// set all sizes of this one as profile photos
-			$r = q("UPDATE photo SET profile = 1 WHERE uid = %d AND resource_id = '%s'",
-				intval(local_channel()),
-				dbesc($hash)
-				);
-			$r = q("UPDATE photo SET photo_flags = ( photo_flags | %d ) WHERE uid = %d AND resource_id = '%s'",
+			$r = q("UPDATE photo SET photo_usage = %d WHERE uid = %d AND resource_id = '%s'",
 				intval(PHOTO_PROFILE),
 				intval(local_channel()),
 				dbesc($hash)
