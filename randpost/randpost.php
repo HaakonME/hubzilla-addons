@@ -50,7 +50,7 @@ function randpost_enotify_store(&$a,&$b) {
 
 	$p = fetch_post_tags($p,true);
 
-	if($p[0]['item_flags'] & ITEM_OBSCURED)
+	if(intval($p[0]['item_obscured']))
 		return;
 
 
@@ -193,7 +193,8 @@ function randpost_enotify_store(&$a,&$b) {
 	$x['author_xchan'] = $c[0]['channel_hash'];
 	$x['owner_xchan'] = $b['item']['owner_xchan'];
 
-	$x['item_flags'] = ITEM_ORIGIN|ITEM_VERIFIED;
+	$x['item_origin'] = 1;
+	$x['item_verified'] = 1;
 
 	// You can't pass a Turing test if you reply in milliseconds. 
 	// Also I believe we've got ten minutes fudge before we declare a post as time traveling.
@@ -257,7 +258,9 @@ function randpost_fetch(&$a,&$b) {
 				$x['aid'] = $c[0]['channel_account_id'];
 				$x['mid'] = $x['parent_mid'] = item_message_id();
 				$x['author_xchan'] = $x['owner_xchan'] = $c[0]['channel_hash'];
-				$x['item_flags'] = ITEM_THREAD_TOP|ITEM_ORIGIN|ITEM_VERIFIED;
+				$x['item_thread_top'] = 1;
+				$x['item_origin'] = 1;
+				$x['item_verified'] = 1;
 				$x['item_wall'] = 1;
 
 				// if it might be a quote make it a quote
